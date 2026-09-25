@@ -6,11 +6,25 @@ CREATE TABLE usuarios (
   nombre VARCHAR(120) NOT NULL,
   email VARCHAR(160) NOT NULL UNIQUE,
   password_hash VARCHAR(255) NOT NULL,
-  rol ENUM('administrador', 'docente') NOT NULL DEFAULT 'docente',
+  rol ENUM('administrador', 'docente', 'estudiante') NOT NULL DEFAULT 'estudiante',
+  fotografia VARCHAR(255) NULL,
   activo TINYINT(1) NOT NULL DEFAULT 1,
   ultimo_acceso DATETIME NULL,
   creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+CREATE TABLE horarios (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(80) NOT NULL DEFAULT 'Jornada regular',
+  hora_entrada TIME NOT NULL,
+  hora_salida TIME NOT NULL,
+  activo TINYINT(1) NOT NULL DEFAULT 1,
+  configurado_por INT UNSIGNED NULL,
+  creado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  actualizado_en TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  CONSTRAINT fk_horario_usuario FOREIGN KEY (configurado_por) REFERENCES usuarios(id) ON DELETE SET NULL,
+  INDEX idx_horario_activo (activo)
 ) ENGINE=InnoDB;
 
 CREATE TABLE cursos (
@@ -68,3 +82,6 @@ CREATE TABLE reportes (
 
 INSERT INTO usuarios (nombre, email, password_hash, rol) VALUES
 ('Administrador Jambelí', 'admin@jambeli.edu.ec', '$2y$10$REEMPLAZAR_CON_PASSWORD_HASH', 'administrador');
+
+INSERT INTO horarios (nombre, hora_entrada, hora_salida, configurado_por)
+SELECT 'Jornada regular', '07:30:00', '13:00:00', id FROM usuarios WHERE email = 'admin@jambeli.edu.ec' LIMIT 1;

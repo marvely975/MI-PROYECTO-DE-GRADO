@@ -11,6 +11,7 @@ La interfaz de demostración está disponible directamente en `index.html`. Incl
 ```text
 .
 ├── index.html              # Prototipo frontend funcional
+├── frontend-enhancements.js # Perfil, horarios, historial y persistencia local
 ├── database/schema.sql     # Esquema normalizado MySQL 8+
 ├── backend/config/         # PDO y variables de entorno
 ├── backend/middleware/     # Sesiones, autorización y validación
